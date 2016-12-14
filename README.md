@@ -1,6 +1,6 @@
-# MDBtoMySQL
+[![Build Status](https://travis-ci.org/Vaggos/MDBtoMySQL.svg?branch=develop)](https://travis-ci.org/Vaggos/MDBtoMySQL)
 
-[![Build Status](https://travis-ci.org/shadiakiki1986/MDBtoMySQL.svg?branch=develop)](https://travis-ci.org/shadiakiki1986/MDBtoMySQL)
+# MDBtoMySQL
 
 Bash script that automates MS Access to MySQL data migration using [mdbtools](https://github.com/brianb/mdbtools).
 
@@ -12,7 +12,7 @@ The aim of this script, is to help the transition of Windows-Microsoft-proprieta
 
 The script can be used interactively or non-interactively.
 
-1. Interactive usage:
+### Interactive usage:
 
 ```bash
 bash MDBtoMySQL.sh
@@ -24,7 +24,7 @@ Then the user is prompted asks for some basic input.
 * The name of the database that you want to create.
 * Note that the mysql host used is `localhost`
 
-2. Non-interactive usage:
+### Non-interactive usage:
 ```bash
 bash MDBtoMySQL.sh -m db.mdb -d movies -u user -p pass 
 ```
