@@ -45,8 +45,7 @@ if [[ $# -eq 0 ]]; then
 
   echo "";
   echo "Please, provide the name of the mdb file.";
-  echo "Make sure to provide the full path,
-  if the file is not in the current directory.";
+  echo "Make sure to provide the full path, if the file is not in the current directory.";
   read db_to_read;
 
   echo "";
