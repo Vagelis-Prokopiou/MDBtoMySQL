@@ -226,7 +226,7 @@ echo "<------------------------------------------------------------------------>
 
 # Get the tables to start exporting the data.
 for table in "${tables[@]}"; do
-  echo "Copying table $db_to_create.$table";
+  echo "Copying table $db_to_create.$table...";
 
   # Create a insert file
   mdb-export -D "%Y-%m-%d %H:%M:%S" -I mysql -R ";\r\n" "$db_to_read" $table > "$table".sql;
@@ -240,9 +240,11 @@ for table in "${tables[@]}"; do
 	$mysqlCmd -e "TRUNCATE table $db_to_create.$table";
 
   if [ -f "$table".sql ]; then
-	  cat "$table".sql | $mysqlCmd;
+    # The sed in necessary for my movies use case.
+    sed -i 's|\\|\ |g' "${table}".sql;
+    cat "$table".sql | $mysqlCmd;
 	  rm "$table".sql;
-    echo "Copied table $db_to_create.$table";
+    echo "Copying table $db_to_create.$table finished successfully.";
   fi
 
 done
