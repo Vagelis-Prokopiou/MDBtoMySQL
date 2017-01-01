@@ -17,24 +17,25 @@
 set -e;
 
 echo "-- -----------------------------------------------------------------------";
-echo "-- MDBtoSQL";
-echo "-- A library for easy data migration from MS Access to a MySQL database";
-echo "-- Copyright (C) 2016- Vagelis Prokopiou.";
-echo "-- Licensed under the MIT licence.";
-echo "-- For more info, check out https://github.com/Vaggos/MDBtoMySQL";
+echo "-- MDBtoSQL:";
+echo "-- A bash script for easy data migration from an MS Access to a MySQL database.";
 echo "-- ";
 echo "-- Usage info:";
 echo "-- This script presupposes that \"mdbtools\" and a \"mysql\" client are installed in your system.";
-echo "-- If not, install them with \"sudo apt-get install mdbtools mysql-client\" in a Debian";
-echo "-- or Debian-based system.";
+echo "-- If not, install them with \"sudo apt-get install mdbtools mysql-client mysql-client\" in a Debian or Debian-based system.";
+echo "-- ";
+echo "-- Author: Vagelis Prokopiou <drz4007@gmail.com>.";
+echo "-- Copyright (C) 2016-$(date +%Y).";
+echo "-- Licensed under the MIT licence.";
+echo "-- For more info, check out https://github.com/Vaggos/MDBtoMySQL";
 echo "-- -----------------------------------------------------------------------";
 
 # Check if mdbtools are installed.
-command -v mdb-tables >/dev/null 2>&1 || { echo >&2 "\"mdb-tools\" are required, but they are not installed (\"sudo apt-get install mdbtools\" to install it). Aborting."; exit 1; }
-command -v mysql >/dev/null 2>&1 || { echo >&2 "\"MySQL\" but it is not installed (\"sudo apt-get install mysql-server mysql-client\" to install it). Aborting."; exit 1; }
+command -v mdb-tables > /dev/null 2>&1 || { echo >&2 "\"mdb-tools\" are required, but they are not installed (\"sudo apt-get install mdbtools\" to install it). Aborting."; exit 1; }
+command -v mysql > /dev/null 2>&1 || { echo >&2 "\"MySQL\" is required but it is not installed (\"sudo apt-get install mysql-server mysql-client\" to install it). Aborting."; exit 1; }
 
 if [[ $# -eq 0 ]]; then
-  # Get all the info you need.
+  # If no arguments have been provided.
   echo "";
   echo "Please, provide the name of the MySQL user.";
   read user;
@@ -44,7 +45,7 @@ if [[ $# -eq 0 ]]; then
   read password;
 
   echo "";
-  echo "Please, provide the name of the mdb file.";
+  echo "Please, provide the name of the mdb database file.";
   echo "Make sure to provide the full path, if the file is not in the current directory.";
   read db_to_read;
 
@@ -56,7 +57,7 @@ if [[ $# -eq 0 ]]; then
   # Create the database.
   echo "";
   echo "!!! Attention !!!";
-  echo "If there already is a database with the same name, it is about to be deleted!!!";
+  echo "If there already is already a database with the same name, it is about to be deleted!!!";
   echo "Press \"Y\" to confirm and continue.";
   echo "Press \"N\" to abort the operation.";
   read proceed;
@@ -221,7 +222,8 @@ fi
 cat .schema.txt | sed "s/\(type 0012\)/int/g" | grep -v "^COMMENT ON " | $mysqlCmd;
 echo "";
 echo "<------------------------------------------------------------------------>";
-echo "  The tables of the \"$db_to_create\" database were successfully created.";
+echo "           The tables of the \"$db_to_create\" database";
+echo "           were successfully created.";
 echo "<------------------------------------------------------------------------>";
 
 # Get the tables to start exporting the data.
@@ -251,5 +253,13 @@ done
 
 echo "";
 echo "<------------------------------------------------------------------------>";
-echo "           Done";
+echo "           Done!";
+echo "<------------------------------------------------------------------------>";
+
+
+echo "";
+echo "<------------------------------------------------------------------------>";
+echo "           Thank for using MDBtoMySQL.";
+echo "           Please, consider contributing back to the project";
+echo "           if you found it useful.";
 echo "<------------------------------------------------------------------------>";
