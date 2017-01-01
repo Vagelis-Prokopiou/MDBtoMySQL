@@ -142,9 +142,10 @@ fi
 # setting password in env var to avoid warning about insecurity of using a password on the command-line
 # quote: mysql: [Warning] Using a password on the command line interface can be insecure.
 # http://serverfault.com/a/476286
-export MYSQL_PWD="$password"
+export MYSQL_PWD="$password";
 mysqlCmd="mysql --host=$host --user=$user $db_to_create"; #  --password=$password
-printf "Connecting using cmd: %s\n" "$mysqlCmd";
+mysqlCmd2="mysql --host=$host --user=$user --password=$password";
+# printf "Connecting using cmd: %s\n" "$mysqlCmd";
 
 # Get the tables to start exporting the data.
 IFS=' ' read -ra tables <<< "$(mdb-tables "$db_to_read")";
@@ -152,8 +153,8 @@ IFS=' ' read -ra tables <<< "$(mdb-tables "$db_to_read")";
 # drop and create
 if [ $dropCreateDb -eq 1 ]; then
   # Create the database.
-  $mysqlCmd -e "DROP DATABASE IF EXISTS $db_to_create";
-  $mysqlCmd -e "CREATE DATABASE $db_to_create DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;";
+  $mysqlCmd2 -e "DROP DATABASE IF EXISTS $db_to_create";
+  $mysqlCmd2 -e "CREATE DATABASE $db_to_create DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;";
   echo "";
   echo "<------------------------------------------------------------------------>"
   echo "           Database \"$db_to_create\" was successfully created."
@@ -216,7 +217,8 @@ fi
 
 # create tables
 # Note on COMMENT ON COLUMN below: these extra lines were showing up in the schema when running on travis-ci
-cat .schema.txt | grep -v "^COMMENT ON " | $mysqlCmd;
+# The sed is necessary for my "movies" use case.
+cat .schema.txt | sed "s/\(.*\)\(type 0012\)\(.*\)//g" | grep -v "^COMMENT ON " | $mysqlCmd;
 echo "";
 echo "<------------------------------------------------------------------------>";
 echo "           The tables of the \"$db_to_create\" database were successfully created.";
