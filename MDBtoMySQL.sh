@@ -33,9 +33,8 @@ echo "-- -----------------------------------------------------------------------
 command -v mdb-tables >/dev/null 2>&1 || { echo >&2 "\"mdb-tools\" are required, but they are not installed (\"sudo apt-get install mdbtools\" to install it). Aborting."; exit 1; }
 command -v mysql >/dev/null 2>&1 || { echo >&2 "\"MySQL\" but it is not installed (\"sudo apt-get install mysql-server mysql-client\" to install it). Aborting."; exit 1; }
 
-if [ $# -eq 1 ]; then
-# Get all the info you need.
-# sleep 1;
+if [[ $# -eq 0 ]]; then
+  # Get all the info you need.
   echo "";
   echo "Please, provide the name of the MySQL user.";
   read user;
