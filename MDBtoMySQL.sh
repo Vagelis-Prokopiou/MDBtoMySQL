@@ -236,12 +236,6 @@ for table in "${tables[@]}"; do
       || echo "No data to copy from $table" && rm "$table".sql;
   fi
 
-  # issue with DEPARTMENTS table, 1st entry has illegal NULL
-  if [ "$table" == "DEPARTMENTS" ]; then
-    grep -v "OUR COMPANY" "$table".sql > temp.sql;
-    mv temp.sql "$table".sql;
-  fi
-
 	# Execute mysql queries.
 	$mysqlCmd -e "TRUNCATE table $db_to_create.$table";
 
