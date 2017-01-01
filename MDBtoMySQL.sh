@@ -218,10 +218,10 @@ fi
 # create tables
 # Note on COMMENT ON COLUMN below: these extra lines were showing up in the schema when running on travis-ci
 # The sed is necessary for my "movies" use case.
-cat .schema.txt | sed "s/\(.*\)\(type 0012\)\(.*\)//g" | grep -v "^COMMENT ON " | $mysqlCmd;
+cat .schema.txt | sed "s/\(type 0012\)/int/g" | grep -v "^COMMENT ON " | $mysqlCmd;
 echo "";
 echo "<------------------------------------------------------------------------>";
-echo "           The tables of the \"$db_to_create\" database were successfully created.";
+echo "  The tables of the \"$db_to_create\" database were successfully created.";
 echo "<------------------------------------------------------------------------>";
 
 # Get the tables to start exporting the data.
