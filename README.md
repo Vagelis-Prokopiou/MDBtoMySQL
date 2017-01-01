@@ -6,7 +6,7 @@ Bash script that automates MS Access to MySQL data migration using [mdbtools](ht
 
 ## Aim of the project
 
-The aim of this script, is to help the transition of Windows-Microsoft-proprietary software users, to the GNU/Linux-open source world/community. Remember, "it is more blessed to give than to receive"...
+The aim of this project, is to help the transition of Windows/Microsoft proprietary software users, to the GNU/Linux open source community.
 
 ## Usage
 
