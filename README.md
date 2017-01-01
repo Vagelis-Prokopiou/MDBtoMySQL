@@ -18,24 +18,24 @@ The script can be used interactively or non-interactively.
 bash MDBtoMySQL.sh
 ```
 
-Then the user is prompted asks for some basic input.
+Then the user is asked for some basic input.
 * The credentials of the mysql user, in order to run the queries.
-* The name of the MS Access db (file).
-* The name of the database that you want to create.
-* Note that the mysql host used is `localhost`
+* The name of the MS Access mdb (file).
+* The name of the database to be created.
+* Note that `localhost` is considered as the default MySQL host.
 
 ### Non-interactive usage:
 ```bash
-bash MDBtoMySQL.sh -m db.mdb -d movies -u user -p pass 
+bash MDBtoMySQL.sh -m db.mdb -d movies -u user -p pass
 ```
 where
-* -m  path to mdb file
-* -d  mysql database into which to import
-* -u  mysql --username parameter
-* -p  mysql --password parameter
-* -h  mysql --host parameter
-* -g  table name that requires "grep `date +%Y-%m-%d`" to save on processing time
-* -t  table names to copy. Skip to copy everything
+* -m  path to mdb file.
+* -d  mysql database into which to import.
+* -u  mysql --username parameter.
+* -p  mysql --password parameter.
+* -h  mysql --host parameter.
+* -g  table name that requires "grep `date +%Y-%m-%d`" to save on processing time.
+* -t  table names to copy. Skip to copy everything.
 
 ## Contribute
 
