@@ -14,7 +14,7 @@
 # mdb-schema	generate schema DDL for the specified file
 # mdb-export	generate CSV style output for a table
 
-set -e
+set -e;
 
 echo "-- -----------------------------------------------------------------------";
 echo "-- MDBtoSQL";
@@ -64,16 +64,16 @@ if [ $# -eq 1 ]; then
   read proceed;
 
   # host parameter to mysql
-  host="localhost"
-  dropCreateDb=1
-  grepTable=""
+  host="localhost";
+  dropCreateDb=1;
+  grepTable="";
 else
-    OPTIND=1         # Reset in case getopts has been used previously in the shell.
+    OPTIND=1; # Reset in case getopts has been used previously in the shell.
 
     # create empty array
     # Example 27-6. Some special properties of arrays
     # http://www.tldp.org/LDP/abs/html/arrays.html
-    declare -a tablesToImport
+    declare -a tablesToImport;
 
     # http://stackoverflow.com/a/14203146/4126114
     # http://mywiki.wooledge.org/BashFAQ/035#getopts
@@ -103,8 +103,8 @@ else
       "Params:\n  mdb: %s\n  db: %s\n  user: %s\n  pass: %s\n  host: %s\n" \
       "${db_to_read}" "${db_to_create}" "$user" "$password" "$host" >&2
 
-    proceed=Y
-    dropCreateDb=0
+    proceed=Y;
+    dropCreateDb=0;
 fi
 
 # Check if the file exists.
@@ -145,11 +145,11 @@ fi
 # quote: mysql: [Warning] Using a password on the command line interface can be insecure.
 # http://serverfault.com/a/476286
 export MYSQL_PWD="$password"
-mysqlCmd="mysql --host=$host --user=$user $db_to_create" #  --password=$password
-printf "Connecting using cmd: %s\n" "$mysqlCmd"
+mysqlCmd="mysql --host=$host --user=$user $db_to_create"; #  --password=$password
+printf "Connecting using cmd: %s\n" "$mysqlCmd";
 
 # Get the tables to start exporting the data.
-IFS=' ' read -ra tables <<< "$(mdb-tables "$db_to_read")"
+IFS=' ' read -ra tables <<< "$(mdb-tables "$db_to_read")";
 
 # drop and create
 if [ $dropCreateDb -eq 1 ]; then
@@ -163,7 +163,7 @@ if [ $dropCreateDb -eq 1 ]; then
 fi
 
 # Create the query that will create the tables.
-mdb-schema "$db_to_read" mysql > .schema.txt.new
+mdb-schema "$db_to_read" mysql > .schema.txt.new;
 
 # alert if schema changed
 # doesnt work with set -e on top
@@ -174,7 +174,7 @@ mdb-schema "$db_to_read" mysql > .schema.txt.new
 #  fi
 #fi
 
-mv .schema.txt.new .schema.txt
+mv .schema.txt.new .schema.txt;
 
 # drop tables, but only those in tablesToImport
 for table in "${tables[@]}"; do
@@ -184,7 +184,7 @@ done
 
 echo "";
 echo "<------------------------------------------------------------------------>"
-echo "           Dropped tables if existant"
+echo "           Dropped pre-existant tables"
 echo "<------------------------------------------------------------------------>"
 
 # if tablesToImport is not empty, filter tables for those that are there
@@ -198,13 +198,13 @@ if [ ${#tablesToImport[@]} -gt 0 ]; then
   #echo "Tables filtered down to"
   #echo ${tables[@]}          # echo ${colors[*]} also works.
 
-  tables=($(printf '%s\n' "${tablesToImport[@]}"))
+  tables=($(printf '%s\n' "${tablesToImport[@]}"));
 fi
 
 # get mdb-export version
-mdbexv=`man mdb-export|tail -n 1|awk '{print $1}'`
+mdbexv=$(man mdb-export|tail -n 1|awk '{print $1}');
 if [ $mdbexv == "MDBTools" ]; then
-  mdbexv=`man mdb-export|tail -n 1|awk '{print $2}'`;
+  mdbexv=$(man mdb-export|tail -n 1|awk '{print $2}');
 fi
 
 # version 0.7.1 latest commit 2013
@@ -212,49 +212,48 @@ fi
 # version 0.7~rc1 latest commit 2011
 # https://github.com/brianb/mdbtools/tree/0.7_rc1
 if [ $mdbexv != "0.7.1" ] && [ $mdbexv != "0.7~rc1" ]; then
-  echo "mdb-export version $mdbexv unsupported yet"
-  exit 1
+  echo "mdb-export version $mdbexv unsupported yet";
+  exit 1;
 fi
 
 # create tables
 # Note on COMMENT ON COLUMN below: these extra lines were showing up in the schema when running on travis-ci
-cat .schema.txt | grep -v "^COMMENT ON " | $mysqlCmd
+cat .schema.txt | grep -v "^COMMENT ON " | $mysqlCmd;
 echo "";
-echo "<------------------------------------------------------------------------>"
-echo "           The tables of the \"$db_to_create\" database were successfully created."
-echo "<------------------------------------------------------------------------>"
+echo "<------------------------------------------------------------------------>";
+echo "           The tables of the \"$db_to_create\" database were successfully created.";
+echo "<------------------------------------------------------------------------>";
 
 # Get the tables to start exporting the data.
 for table in "${tables[@]}"; do
-  echo "Copying table $db_to_create.$table"
+  echo "Copying table $db_to_create.$table";
 
   # Create a insert file
-  mdb-export -D "%Y-%m-%d %H:%M:%S" -I mysql -R ";\r\n" "$db_to_read" $table > "$table".sql
+  mdb-export -D "%Y-%m-%d %H:%M:%S" -I mysql -R ";\r\n" "$db_to_read" $table > "$table".sql;
   if [ "$table" == "$grepTable" ]; then
-    echo "grepping table $table for date"
+    echo "grepping table $table for date";
     grep "`date +%Y-%m-%d`" "$table".sql > temp.sql && mv temp.sql "$table".sql \
-      || echo "No data to copy from $table" && rm "$table".sql
+      || echo "No data to copy from $table" && rm "$table".sql;
   fi
 
   # issue with DEPARTMENTS table, 1st entry has illegal NULL
   if [ "$table" == "DEPARTMENTS" ]; then
-    grep -v "OUR COMPANY" "$table".sql > temp.sql
-    mv temp.sql "$table".sql
+    grep -v "OUR COMPANY" "$table".sql > temp.sql;
+    mv temp.sql "$table".sql;
   fi
 
 	# Execute mysql queries.
 	$mysqlCmd -e "TRUNCATE table $db_to_create.$table";
 
   if [ -f "$table".sql ]; then
-	  cat "$table".sql | $mysqlCmd
+	  cat "$table".sql | $mysqlCmd;
 	  rm "$table".sql;
-    echo "Copied table $db_to_create.$table"
+    echo "Copied table $db_to_create.$table";
   fi
 
 done
 
 echo "";
-echo "<------------------------------------------------------------------------>"
-echo "           Done"
-echo "<------------------------------------------------------------------------>"
-
+echo "<------------------------------------------------------------------------>";
+echo "           Done";
+echo "<------------------------------------------------------------------------>";
