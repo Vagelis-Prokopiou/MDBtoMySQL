@@ -39,6 +39,6 @@ where
 
 ## Contribute
 
-Since I cannot test every possible case of database schema, if you encounter errors with your db setup, create an issue in order to fix it and incorporate it in the project.
+Since I cannot test every possible case of database schema, if you encounter errors with your db setup/schema, create an issue with the appropriate info.
 
 All development happens on the "develop" branch. Make sure to target any PRs to that branch.
